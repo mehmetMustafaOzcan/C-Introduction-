@@ -45,12 +45,20 @@ namespace AlisverisEkrani
 
         private void btnYaz_Click(object sender, EventArgs e)
         {
-            StreamReader sr = new StreamReader(txtDosyaYolu.Text);
+            try
+            {
+                StreamReader sr = new StreamReader(txtDosyaYolu.Text);
 
-            string okunan = sr.ReadToEnd();
-            sr.Close();
-            txtOkunan.Text=okunan;        
+                string okunan = sr.ReadToEnd();
+                sr.Close();
+                txtOkunan.Text = okunan;
 
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Dosya Yolu Seçiniz");
+            }
         }
 
         private void btnOku_Click(object sender, EventArgs e)
