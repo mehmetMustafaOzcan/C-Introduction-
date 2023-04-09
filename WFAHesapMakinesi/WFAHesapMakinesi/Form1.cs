@@ -113,13 +113,12 @@ namespace WFAHesapMakinesi
             int i = 0;
             lblSayilar.Text += txtYazi.Text;
             string sayilarım = lblSayilar.Text;
-
             
             DataTable calc = new DataTable();          
 
-
             txtYazi.Text=calc.Compute(lblSayilar.Text, " ").ToString();
             
+            lblSayilar.Text = "";
         }
 
         private void BtncE_Click(object sender, EventArgs e)
