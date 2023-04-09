@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hamburgercim.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +14,7 @@ using Menu = Hamburgercim.Models.Menu;
 
 namespace Hamburgercim
 {
-    
+
     public partial class MenuEkle : Form
     {
         public MenuEkle()
@@ -23,7 +24,18 @@ namespace Hamburgercim
         public List<Menu> MenuEkleListe;
         private void btnMenuKaydet_Click(object sender, EventArgs e)
         {
-            MenuEkleListe.Add(new Menu() { Name = txtMenuAdi.Text , Price = nupFiyat.Value });
+            if (txtMenuAdi.Text !="")
+            {//Seçilen boş değilse yazılanları menuye ekle
+                Fonksiyonlar.AddMenu(MenuEkleListe, txtMenuAdi.Text, nupFiyat.Value);
+                MessageBox.Show($"Eklenen Menu: {txtMenuAdi.Text}\nFiyat: {nupFiyat.Value}");
+            }
+            else
+            {
+                MessageBox.Show("Menü Adı Giriniz", "Menü Adı", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
+
+
     }
 }

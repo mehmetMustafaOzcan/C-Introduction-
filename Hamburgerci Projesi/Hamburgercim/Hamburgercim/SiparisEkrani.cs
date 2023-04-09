@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using Menu = Hamburgercim.Models.Menu;
 
 namespace Hamburgercim
@@ -18,96 +21,128 @@ namespace Hamburgercim
         {
             InitializeComponent();
         }
-        public List<Menu> MenulerSE;//= new List<Menu>();
-        public List<Ekstra> Ekstralar;//= new List<Ekstra>();
-        public Siparis siparis2;        
-        decimal sizePrice = 1;
-        decimal mainPrice = 0;
-        decimal ekstra;
-        decimal totalPrice = 0;
+        
+        public List<Menu> MenulerSE;
+        public List<Ekstra> Ekstralar;
+        public Siparis siparis2;
+      
+        decimal sizePrice = 1, mainPrice = 0, ekstra, totalPrice = 0, singleProductPrice;
         string size, ekstraisimleri;
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            MenulerSE.Clear();
-            Ekstralar.Clear();
-            AddMenu("BigKing", 50);
-            AddMenu("Double King Chicken", 45);
-            AddEkstra("Ranch", 5);
-            AddEkstra("Ketçap", 5);
-            AddEkstra("BBQ", 5);
-            AddEkstra("Hardal", 5);
-            AddEkstra("Mayonez", 5);
-            AddEkstra("Buffalo", 5);
-
-
             foreach (var item in Ekstralar)
             {
                 CheckBox chk = new CheckBox();
-                chk.Name = $"chk{item}";
-                chk.Text = item.Name;
-                
-                 flpEkstra.Controls.Add(chk);  
-            }
-            
-            
+                chk.Name = $"chk{item}";//checbox name set etme
+                chk.Text = item.Name;//Ekstralar listemdeki Ekstra nesnemin adını chkbox textine yaz
 
+                flpEkstra.Controls.Add(chk);//flowloyaouta ilgili checkboxu ekle. 
+            }//Ekstralar listemdeki tüm nesneleri ekleme
 
-            foreach (var item in MenulerSE)
+            foreach (var item in MenulerSE)//MenulerSE listemdeki tüm nesneleri ekleme
             {
-                
-
                 cbMenuSelect.Items.Add(item.Name);
             }
-
         }
-        private void AddEkstra(string ekstraName, decimal price)
-        {
-            Ekstralar.Add(new Ekstra() { Name = ekstraName, Price = price });
-        }
-
-        private void AddMenu(string menuName, decimal price)
-        {
-            MenulerSE.Add(new Menu() { Name = menuName, Price = price });
-        }
-
         private void cbMenuSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             foreach (var item in MenulerSE)
+         //MenulerSE listemdeki isimle comboboxdaki seçilenin ismi aynı ise mainPrice set et.
             {
                 if (cbMenuSelect.SelectedItem == item.Name)
                 {
                     mainPrice = item.Price;
                 }
+            }
+            gbSize.Enabled = true;            
+        }
+        string siparisMetni;
+        private void btnSiparisEkle_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                EkstraKontrol();//ekstra sos fiyat kontrolü
+                SizeControl();//boyut set et
+                singleProductPrice = nupPiece.Value * (mainPrice + sizePrice + ekstra);
+                // singleProductPrice => son seçilen siparişlerin fiyatı
+
+                DialogResult dr = MessageBox.Show($" ₺ {singleProductPrice} Siparişi Onaylıyor Musunuz?", "Siparişi Tamamla", MessageBoxButtons.YesNo);
+                if (dr == DialogResult.Yes)
+                {
+                    totalPrice += (nupPiece.Value * (mainPrice + sizePrice + ekstra));
+                    lblTotalPrice.Text = $"{totalPrice} ₺";
+                    siparisMetni = $"{(cbMenuSelect.Text)} {nupPiece.Value} adet, {size} boy ( {ekstraisimleri} ) Toplam {nupPiece.Value * (mainPrice + sizePrice + ekstra) } ₺";
+
+                    lstSiparisler.Items.Add(siparisMetni);
+
+                    SetSiparisInfo();
+                    ClearAllSelected();
+                }
+                else
+                {
+                    MessageBox.Show("İptal Edildi");
+                    ClearAllSelected();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lütfen Menü ve {ex.Message}");
+            }
+
+        }
+        public void button2_Click_1(object sender, EventArgs e)
+        {
+            TumSiparisler tumSiparisler = new TumSiparisler();
+            tumSiparisler.MdiParent = ActiveForm;
+            tumSiparisler.lblCiro.Text = siparis2.Ciro.ToString();
+            tumSiparisler.lblSiparisSayisi.Text = siparis2.ToplamSiparisSayisi.ToString();
+            tumSiparisler.lblSatilanUrun.Text = siparis2.SatılanUrunAdeti.ToString();
+            tumSiparisler.lblEkstraMalzeme.Text = siparis2.EkstraMalzemeGeliri.ToString();
+            tumSiparisler.lstTumSiparis.Items.AddRange(siparis2.TumSiparisler.ToArray());
+
+            using (Stream stream = new FileStream("./tumsiparisler.xml", FileMode.Create, FileAccess.Write))
+            {
+                XmlSerializer xml = new XmlSerializer(typeof(Siparis));
+                xml.Serialize(stream, siparis2);
 
             }
-            gbSize.Enabled = true;
-            // lblTotalPrice.Text = Math.Round(mainPrice, 2).ToString();
+
+
+                this.Close();
+
+            tumSiparisler.Show();
         }
 
-        //private void rbMiddle_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    sizePrice = rbMiddle.Checked ? mainPrice * 1.05m : mainPrice;
+        private void SizeControl()
+        {
+            sizePrice = 0;
+            foreach (var item in gbSize.Controls.OfType<RadioButton>())
+            {//groupbozdeki radiobuttonlara bak ve seçili olanlara gore ekstra fiyat ve seçilenin adını set et.
+                if (item == rbBig && item.Checked)
+                {
+                    sizePrice = mainPrice * 0.1m;
+                    size = item.Text;
+                }
+                else if (item == rbMiddle && item.Checked)
+                {
+                    sizePrice = mainPrice * 0.05m;
+                    size = item.Text;
+                }
+                else if (item == rbSmall && item.Checked)
+                {
+                    sizePrice = 0;
+                    size = item.Text;
+                }
+               
+            }
+            if (size == null)//hiçbiri seçilmedi ise hata gönder
+            {
+                throw new Exception("Boyut Seçiniz");
+            }
 
-        //    lblTotalPrice.Text = Math.Round(PriceWithSize, 2).ToString();
-        //}
-
-        //private void rbBig_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    PriceWithSize = rbBig.Checked ? mainPrice * 1.1m : mainPrice;
-
-        //    lblTotalPrice.Text = Math.Round(PriceWithSize, 2).ToString();
-        //}
-
-        //private void flpEkstra_MouseClick(object sender, MouseEventArgs e)
-        //{
-
-
-        //    lblTotalPrice.Text = Math.Round(PriceWithSize + ekstra, 2).ToString();
-        //}
-
-        private void EkstraKontrol()//checkboxları kontrol et ekli olanları al
+        }//Küçük -orta-büyük boyut kontrolü
+        private void EkstraKontrol()//checkboxları kontrol et ekli olanları fiat ve isimlerini al
         {
             ekstra = 0;
             ekstraisimleri = String.Empty;
@@ -124,60 +159,32 @@ namespace Hamburgercim
                             break;
 
                         }
-
                     }
                 }
             }
         }
-
-
-        private void btnSiparisEkle_Click(object sender, EventArgs e)
+        private void ClearAllSelected()
         {
-            EkstraKontrol();
-            SizeControl();            
-            totalPrice += (nupPiece.Value * (mainPrice + sizePrice + ekstra));
-            lblTotalPrice.Text = totalPrice.ToString();
-
-            lstSiparisler.Items.Add($"{(cbMenuSelect.Text)} {nupPiece.Value} adet, {size} boy ({ekstraisimleri}) Toplam {lblTotalPrice.Text} ");
-
-            siparis2.EkstraMalzemeGeliri += ekstra;
-            siparis2.ToplamSiparisSayisi += lstSiparisler.Items.Count;
-            siparis2.SatılanUrunAdeti+= nupPiece.Value;
-            siparis2.Ciro += totalPrice;
-
-
-        }
-
-      
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            TumSiparisler tumSiparisler = new TumSiparisler();
-            tumSiparisler.MdiParent = ActiveForm;
-            tumSiparisler.lblCiro.Text = siparis2.Ciro.ToString();
-            tumSiparisler.lblSİparişSayisi.Text =siparis2.ToplamSiparisSayisi.ToString();
-            tumSiparisler.lblSatilanUrun.Text = siparis2.SatılanUrunAdeti.ToString();
-
-            tumSiparisler.Show();
-        }
-
-        private void SizeControl()
-        {
-            sizePrice = 0;
+            cbMenuSelect.SelectedIndex = -1;
+            gbSize.Enabled = false;
+            size = null;
             foreach (var item in gbSize.Controls.OfType<RadioButton>())
             {
-                if (item == rbBig && item.Checked)
-                {
-                    sizePrice = mainPrice * 0.1m;
-                    size = item.Text;
-                }
-
-                else if (item == rbMiddle && item.Checked)
-                {
-                    sizePrice = mainPrice * 0.05m;
-                    size = item.Text;
-                }
-
+                item.Checked = false;
             }
+            foreach (var item in flpEkstra.Controls.OfType<CheckBox>())
+            {
+                item.Checked = false;
+            }
+            nupPiece.Value = 1;
+        }
+        private void SetSiparisInfo()
+        {//fiyat bilgilerini sipariş sınıfı nesneme set et, bu bilgi anasayfadaki sipiariş nesnem ile eşitelndiği için bilgiler her zaman güncel ve kaybolmuyor.
+            siparis2.Ciro += singleProductPrice;
+            siparis2.EkstraMalzemeGeliri += ekstra;
+            siparis2.SatılanUrunAdeti += nupPiece.Value;
+            siparis2.ToplamSiparisSayisi++;//her tık 1 sipariş
+            siparis2.TumSiparisler.Add(siparisMetni);
         }
     }
 }

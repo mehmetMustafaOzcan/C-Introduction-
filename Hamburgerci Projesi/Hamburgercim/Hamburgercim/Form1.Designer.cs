@@ -45,7 +45,7 @@
             this.ürünYönetimiToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(699, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(820, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -70,6 +70,7 @@
             this.siparişBilgileriToolStripMenuItem1.Name = "siparişBilgileriToolStripMenuItem1";
             this.siparişBilgileriToolStripMenuItem1.Size = new System.Drawing.Size(150, 22);
             this.siparişBilgileriToolStripMenuItem1.Text = "Sipariş Bilgileri";
+            this.siparişBilgileriToolStripMenuItem1.Click += new System.EventHandler(this.siparişBilgileriToolStripMenuItem1_Click);
             // 
             // ürünYönetimiToolStripMenuItem
             // 
@@ -98,12 +99,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(699, 550);
+            this.ClientSize = new System.Drawing.Size(820, 674);
             this.Controls.Add(this.menuStrip1);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

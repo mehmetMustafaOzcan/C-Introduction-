@@ -44,7 +44,7 @@
             this.groupBox1.Controls.Add(this.txtEkstraMalzemeEkle);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(29, 27);
+            this.groupBox1.Location = new System.Drawing.Point(56, 80);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -56,9 +56,24 @@
             // nupPrice
             // 
             this.nupPrice.Location = new System.Drawing.Point(222, 96);
+            this.nupPrice.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.nupPrice.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.nupPrice.Name = "nupPrice";
             this.nupPrice.Size = new System.Drawing.Size(149, 26);
             this.nupPrice.TabIndex = 2;
+            this.nupPrice.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // txtEkstraMalzemeEkle
             // 
@@ -87,7 +102,7 @@
             // 
             // btnEkle
             // 
-            this.btnEkle.Location = new System.Drawing.Point(388, 240);
+            this.btnEkle.Location = new System.Drawing.Point(415, 293);
             this.btnEkle.Name = "btnEkle";
             this.btnEkle.Size = new System.Drawing.Size(97, 32);
             this.btnEkle.TabIndex = 1;
@@ -99,13 +114,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 482);
+            this.ClientSize = new System.Drawing.Size(600, 400);
             this.Controls.Add(this.btnEkle);
             this.Controls.Add(this.groupBox1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "EkstraMazlemeEkle";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EkstraMazlemeEkle";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

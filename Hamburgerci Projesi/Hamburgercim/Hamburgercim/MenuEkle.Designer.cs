@@ -45,7 +45,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.groupBox1.Location = new System.Drawing.Point(27, 29);
+            this.groupBox1.Location = new System.Drawing.Point(50, 60);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(312, 187);
             this.groupBox1.TabIndex = 0;
@@ -55,9 +55,24 @@
             // nupFiyat
             // 
             this.nupFiyat.Location = new System.Drawing.Point(121, 96);
+            this.nupFiyat.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.nupFiyat.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.nupFiyat.Name = "nupFiyat";
             this.nupFiyat.Size = new System.Drawing.Size(120, 26);
             this.nupFiyat.TabIndex = 2;
+            this.nupFiyat.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // txtMenuAdi
             // 
@@ -87,7 +102,7 @@
             // 
             // btnMenuKaydet
             // 
-            this.btnMenuKaydet.Location = new System.Drawing.Point(285, 259);
+            this.btnMenuKaydet.Location = new System.Drawing.Point(308, 290);
             this.btnMenuKaydet.Name = "btnMenuKaydet";
             this.btnMenuKaydet.Size = new System.Drawing.Size(105, 23);
             this.btnMenuKaydet.TabIndex = 1;
@@ -99,11 +114,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(448, 393);
+            this.ClientSize = new System.Drawing.Size(600, 400);
             this.Controls.Add(this.btnMenuKaydet);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MenuEkle";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form4";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

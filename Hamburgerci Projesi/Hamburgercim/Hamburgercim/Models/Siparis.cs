@@ -12,5 +12,6 @@ namespace Hamburgercim.Models
         public decimal ToplamSiparisSayisi { get; set; }
         public decimal EkstraMalzemeGeliri { get; set; }
         public decimal SatılanUrunAdeti { get; set; }
+        public List<string> TumSiparisler = new List<string>();
     }
 }

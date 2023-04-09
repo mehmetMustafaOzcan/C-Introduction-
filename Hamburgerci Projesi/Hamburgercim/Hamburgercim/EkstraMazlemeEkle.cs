@@ -22,8 +22,15 @@ namespace Hamburgercim
 
         private void btnEkle_Click(object sender, EventArgs e)
         {
-            EkstraEkleListe.Add(new Ekstra() { Name = txtEkstraMalzemeEkle.Text, Price = nupPrice.Value });
-
+            if (txtEkstraMalzemeEkle.Text!="")
+            {
+                Fonksiyonlar.AddEkstra(EkstraEkleListe, txtEkstraMalzemeEkle.Text, nupPrice.Value);
+                MessageBox.Show($"Eklenen Ekstra: {txtEkstraMalzemeEkle.Text}\nFiyat: {nupPrice.Value}");
+            }
+            else
+            {
+                MessageBox.Show("Ekstra Malzeme Adı Giriniz", "Ekstra Malzeme Adı", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }           
         }
     }
 }
